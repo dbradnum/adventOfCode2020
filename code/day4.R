@@ -1,7 +1,7 @@
 library(tidyverse)
 
 CRLF = "\\r\\n"
-recordSeparator = strrep(CLRF,2)
+recordSeparator = strrep(CRLF,2)
 
 raw = str_split(
   read_file("inputs/4.txt"),
