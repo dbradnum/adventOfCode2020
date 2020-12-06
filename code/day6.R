@@ -11,8 +11,9 @@ tibble(fullText = unlist(raw)) %>%
   mutate(rowID = row_number(),
          fullText = str_replace_all(fullText,CRLF,""),
          allChars = str_split(fullText,""),
-         distinctChars = map(allChars,unique),
-         nDistinct = lengths(distinctChars)) %>% 
+         nDistinct = map_int(allChars,
+                             ~length(unique(.)))
+         ) %>% 
   summarise(answer = sum(nDistinct))
 
 
@@ -20,9 +21,12 @@ tibble(fullText = unlist(raw)) %>%
 
 tibble(fullText = unlist(raw)) %>% 
   mutate(rowID = row_number(),
-         answers = str_split(fullText,CRLF)) %>% 
-  unnest_longer(answers) %>% 
-  mutate(allChars = str_split(answers,"")) %>% 
-  group_by(rowID) %>% 
-  summarise(intersection = list(reduce(allChars,intersect))) %>% 
-  summarise(answer = sum(lengths(intersection)))
+         answers = str_split(fullText,CRLF),
+         nChars = map_int(answers,
+                 ~str_split(.,"") %>% 
+                   reduce(intersect) %>% 
+                   length)) %>% 
+  summarise(answer = sum(nChars))
+
+
+
