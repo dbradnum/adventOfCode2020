@@ -23,9 +23,9 @@ tibble(fullText = unlist(raw)) %>%
   mutate(rowID = row_number(),
          answers = str_split(fullText,CRLF),
          nChars = map_int(answers,
-                 ~str_split(.,"") %>% 
-                   reduce(intersect) %>% 
-                   length)) %>% 
+                          ~str_split(.,"") %>% 
+                            reduce(intersect) %>% 
+                            length)) %>% 
   summarise(answer = sum(nChars))
 
 
