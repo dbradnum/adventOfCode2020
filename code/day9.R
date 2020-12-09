@@ -35,7 +35,7 @@ while (!success){
   slidingSum = slide_dbl(raw,sum,.before = iSeqLength - 1,.complete = T)
   hits =  slidingSum == part1Solution 
   
-  if (sum(hits,na.rm = T) > 0 ){
+  if (any(hits)){
     endIndex = which(hits)
     print(str_glue("Success: sequence of {iSeqLength} values ending at position {endIndex}"))
     
