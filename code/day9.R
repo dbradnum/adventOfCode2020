@@ -1,5 +1,7 @@
 library(tidyverse)
 library(bit64)
+library(slider)
+
 
 raw = as.integer64(read_lines("inputs/9.txt"))
 
@@ -12,24 +14,36 @@ isValid = imap_lgl(raw, function(x,i) {
 
   previousSums = combn(raw[(i-windowSize) : (i-1)], 
                        2,
-                       FUN = sum.integer64,
-                       simplify = F) #  because we're dealing with int64
+                       FUN = sum.integer64) 
   
-  u = unlist(previousSums)
+  # because of int64 issue - need to investigate this further
+  class(previousSums) = "integer64"
   
-    # because of int64 issue - need to investigate this further
-  class(u) = "integer64"
-  
-  return (x %in% u)
+  return (x %in% previousSums)
 })
 
-raw[which(!isValid)]     
-  
+part1Solution = raw[which(!isValid)]     
+part1Solution  
 
-# s = seq(10)
-# test = as.integer64(s)
-# combn(s,2)
-# combn(test,2)
-# 
-# matrix(s)
-# matrix(test)
+
+# part 2 ------------------------------------------------------------------
+
+iSeqLength = 2
+
+success = F
+while (!success){
+  slidingSum = slide_dbl(raw,sum,.before = iSeqLength - 1,.complete = T)
+  hits =  slidingSum == part1Solution 
+  
+  if (sum(hits,na.rm = T) > 0 ){
+    endIndex = which(hits)
+    print(str_glue("Success: sequence of {iSeqLength} values ending at position {endIndex}"))
+    
+    range = raw[(endIndex - iSeqLength):endIndex]
+    print(str_glue("Min + max = {min(range) + max(range)}"))
+    
+    success = T
+  } else {
+    iSeqLength = iSeqLength + 1
+  }
+}
