@@ -7,7 +7,7 @@ instructions = read_csv("inputs/12.txt",col_names = "instruction") %>%
 
 compass = list(matrix(c(1,0)), # E
                matrix(c(0,1)), # S
-               matrix( c(-1,0)), # W
+               matrix(c(-1,0)), # W
                matrix(c(0,-1))) # N
 
 directionMap = 1:4
